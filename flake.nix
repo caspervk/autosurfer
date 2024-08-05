@@ -62,7 +62,7 @@
       # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/docker/examples.nix
       oci = pkgs.dockerTools.streamLayeredImage {
         name = "autosurfer";
-        tag = "0.0.1";
+        tag = "dev";
         created = builtins.substring 0 8 self.lastModifiedDate;
         contents = [
           env
