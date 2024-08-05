@@ -80,6 +80,8 @@
         '';
         config = {
           Env = [
+            # Show print()s in podman logs
+            "PYTHONUNBUFFERED=1"
             # HOME is not set by podman (but it is by docker??), and is
             # required for Firefox to start.
             "HOME=/"
