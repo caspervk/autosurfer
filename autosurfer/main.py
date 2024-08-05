@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 
 import websockets
 from selenium import webdriver
@@ -15,7 +16,9 @@ service = webdriver.FirefoxService(
 options = webdriver.FirefoxOptions()
 # Selenium only checks /usr/bin/firefox by default
 options.binary_location = "/bin/firefox"
-options.add_argument("--headless")
+
+if not os.getenv("DISPLAY"):
+    options.add_argument("--headless")
 
 driver = webdriver.Firefox(service=service, options=options)
 driver.set_page_load_timeout(3)
