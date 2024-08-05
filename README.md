@@ -3,7 +3,7 @@ Automatically open a bunch of random websites to thwart attempts at [illegal
 internet surveillance](https://ulovliglogning.dk/). Privacy through obscurity?
 
 <video src="/caspervk/autosurfer/raw/branch/master/img/preview.mp4" controls></video>
-
+[Video Preview](https://git.caspervk.net/caspervk/autosurfer/raw/branch/master/img/preview.mp4)
 
 ## Getting started
 ```shell
