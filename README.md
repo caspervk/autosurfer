@@ -7,12 +7,12 @@ internet surveillance](https://ulovliglogning.dk/). Privacy through obscurity?
 
 # Getting Started
 ```shell
-podman run --rm -it quay.io/caspervk/autosurfer:latest
+podman run --rm quay.io/caspervk/autosurfer:latest
 ```
 
 To show the Firefox GUI:
 ```shell
-podman run --rm -it --network host --env DISPLAY --security-opt label=type:container_runtime_t quay.io/caspervk/autosurfer:latest
+podman run --rm --network host --env DISPLAY --security-opt label=type:container_runtime_t quay.io/caspervk/autosurfer:latest
 ```
 
 
@@ -20,6 +20,6 @@ podman run --rm -it --network host --env DISPLAY --security-opt label=type:conta
 ```shell
 nix build .#oci
 ./result | podman load
-podman run --rm -it autosurfer:dev
+podman run --rm autosurfer:dev
 # podman push autosurfer:dev quay.io/caspervk/autosurfer:latest
 ```
