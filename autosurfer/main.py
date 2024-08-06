@@ -1,9 +1,12 @@
 import asyncio
 import json
+import math
 import os
+import random
 
 import websockets
 from selenium import webdriver
+from selenium.common.exceptions import InvalidSessionIdException
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.remote.webelement import WebElement
@@ -60,18 +63,38 @@ def ct_handler(data: websockets.Data, domains: asyncio.Queue) -> None:
     domains.put_nowait(cert_domain)
 
 
+async def surf(url: str) -> None:
+    """Surf around URL for a bit."""
+    for i in range(math.ceil(random.expovariate(0.5))):
+        print("🏄" if i == 0 else "🔗", url)
+        try:
+            await asyncio.to_thread(driver.get, url)
+            # Find all links on page. This is *much* faster than find_elements("a") + get_attribute("href")
+            links = await asyncio.to_thread(
+                driver.execute_script,
+                "return [...document.links].filter(a => !!a.host && a.href != location.href && !a.href.includes('#')).map(a => a.href);",
+            )
+        except InvalidSessionIdException:
+            # Browser closed: no way to recover
+            raise
+        except WebDriverException:
+            # Timeout, network error, JavaScript failure etc.
+            break
+        try:
+            url = random.choice(links)
+        except IndexError:
+            break
+
+
 async def surfer() -> None:
     """Continuously open domains from the queue in Firefox."""
     domains = asyncio.Queue(maxsize=50)
     ct_stream_task = asyncio.create_task(ct_stream(domains))
     while True:
-        domain = await domains.get()
-        url = f"https://{domain}"
-        print("🏄", url)
         try:
-            await asyncio.to_thread(driver.get, url)
-        except WebDriverException:
-            pass
+            domain = await domains.get()
+            url = f"https://{domain}"
+            await surf(url)
         except (KeyboardInterrupt, asyncio.CancelledError):
             break
     ct_stream_task.cancel()
