@@ -25,12 +25,18 @@ newly issued certificates and attempts to open the domain in Firefox using
 Selenium.
 
 
-## Building
+## Development
 ```shell
+# Build
 nix build .#oci
 ./result | podman load
 podman run --rm autosurfer:dev
-# podman push autosurfer:dev quay.io/caspervk/autosurfer:latest
+
+# Release
+podman push autosurfer:dev quay.io/caspervk/autosurfer:latest
+
+# 👉😎👉
+podman run --rm -v ./autosurfer/:/autosurfer/:ro --network host --env DISPLAY --security-opt label=type:container_runtime_t autosurfer:dev
 ```
 
 
