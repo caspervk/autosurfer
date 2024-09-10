@@ -45,8 +45,10 @@
         })
         pkgs.geckodriver
         (pkgs.python3.withPackages (ps: [
+          ps.cryptography
+          ps.httpx
           ps.selenium
-          ps.websockets
+          ps.structlog
         ]))
         # pkgs.bashInteractive
         # pkgs.coreutils
@@ -86,12 +88,15 @@
             # required for Firefox to start.
             "HOME=/"
           ];
-          Entrypoint = ["python" "/autosurfer/main.py"];
+          # Entrypoint = ["python" "/autosurfer/main.py"];
+          Entrypoint = ["python" "/autosurfer/ct.py"];
         };
       };
 
-      # `nix shell`
-      default = env;
+    };
+    apps.${system}.default = {
+      type = "app";
+      program = "${self.packages.${system}.default}/bin/python autosurfer/ct.py";
     };
   };
 }
